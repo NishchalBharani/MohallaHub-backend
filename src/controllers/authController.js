@@ -426,13 +426,19 @@ exports.verifyAddress = async (req, res, next) => {
 
     const { pincode, fullAddress, city, state, coordinates } = req.body;
 
+    // Ensure coordinates have proper values
+    const safeCoordinates = coordinates || { 
+      latitude: 0, 
+      longitude: 0 
+    };
+
     // Find or create neighborhood
     let neighborhood = await Neighborhood.findOne({
       'location.address.pincode': pincode
     });
 
     if (!neighborhood) {
-      // Create new neighborhood
+      // Create new neighborhood with safe coordinates
       neighborhood = await Neighborhood.create({
         name: `${city} - ${pincode}`,
         location: {
@@ -443,7 +449,10 @@ exports.verifyAddress = async (req, res, next) => {
             state,
             country: 'India'
           },
-          coordinates: coordinates || { latitude: 0, longitude: 0 }
+          coordinates: {
+            latitude: safeCoordinates.latitude || 0,
+            longitude: safeCoordinates.longitude || 0
+          }
         }
       });
     }
@@ -458,7 +467,7 @@ exports.verifyAddress = async (req, res, next) => {
           city,
           state,
           country: 'India',
-          coordinates: coordinates || { latitude: 0, longitude: 0 },
+          coordinates: safeCoordinates,
           geohash: neighborhood.location.geohash
         },
         neighborhood: neighborhood._id,
@@ -485,6 +494,12 @@ exports.verifyAddress = async (req, res, next) => {
 
   } catch (error) {
     console.error('Address verification error:', error);
+    
+    // More detailed error logging
+    if (error.name === 'ValidationError') {
+      console.error('Validation error details:', error.errors);
+    }
+    
     next(error);
   }
 };
