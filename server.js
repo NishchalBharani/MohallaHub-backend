@@ -1,10 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('dotenv').config();
 
 // Import routes
 const authRoutes = require('./src/routes/auth');
@@ -22,7 +22,7 @@ const app = express();
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:19006',
+  origin: process.env.FRONTEND_URL || 'http://192.168.0.111:19006',
   credentials: true
 }));
 
@@ -80,7 +80,7 @@ app.use(errorHandler);
 // MongoDB connection
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mohallahub', {
+    const conn = await mongoose.connect(process.env.MONGO_URI || '***REMOVED***', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

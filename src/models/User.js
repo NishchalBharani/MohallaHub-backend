@@ -175,7 +175,7 @@ userSchema.methods.generateAuthToken = function() {
       role: this.role,
       neighborhood: this.neighborhood 
     },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || "95ea572432f58e4557a3390709ead8608025f361eabd45c4f37040c6724886e3",
     { expiresIn: process.env.JWT_EXPIRE || '30d' }
   );
 };

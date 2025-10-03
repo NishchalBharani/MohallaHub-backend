@@ -429,7 +429,7 @@ marketplaceSchema.statics.findExpiringSoon = function(neighborhoodId, limit = 10
 };
 
 // Cleanup expired listings
-eighborhoodSchema.statics.cleanupExpired = function() {
+marketplaceSchema.statics.cleanupExpired = function() {
   return this.updateMany(
     { 
       expiresAt: { $lte: new Date() },

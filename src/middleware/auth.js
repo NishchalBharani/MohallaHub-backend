@@ -26,7 +26,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "95ea572432f58e4557a3390709ead8608025f361eabd45c4f37040c6724886e3");
 
     // Check if user still exists
     const user = await User.findById(decoded.id).populate('neighborhood');
@@ -115,7 +115,7 @@ exports.optionalAuth = asyncHandler(async (req, res, next) => {
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "95ea572432f58e4557a3390709ead8608025f361eabd45c4f37040c6724886e3");
 
     // Check if user exists and is active
     const user = await User.findById(decoded.id).populate('neighborhood');
@@ -178,7 +178,7 @@ exports.validateToken = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "95ea572432f58e4557a3390709ead8608025f361eabd45c4f37040c6724886e3");
     const user = await User.findById(decoded.id).select('phone name isPhoneVerified isAddressVerified role');
     
     if (!user || user.status !== 'active') {

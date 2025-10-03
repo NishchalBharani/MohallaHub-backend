@@ -37,7 +37,7 @@ exports.register = async (req, res, next) => {
 
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    
+    console.log(`Generated OTP for ${phone}: ${otp}`);
     // Create new user
     const user = await User.create({
       phone,
@@ -111,6 +111,7 @@ exports.login = async (req, res, next) => {
 
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`Generated OTP for ${phone}: ${otp}`);
     
     // Update user with new OTP
     user.otp = {
