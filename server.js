@@ -58,6 +58,7 @@ app.get('/api/health', (req, res) => {
     status: 'OK', 
     message: 'MohallaHub API is running!',
     hindi_message: 'मोहल्ला हब एपीआई चल रही है!',
+    kannada_message: 'ಮೊಹಲ್ಲಾಹಬ್ API ಚಾಲನೆಯಲ್ಲಿದೆ!',
     timestamp: new Date().toISOString(),
     version: '1.0.0'
   });
@@ -70,7 +71,8 @@ app.get('/', (req, res) => {
     description: 'Hyperlocal Neighborhood App for India',
     version: '1.0.0',
     message: 'Welcome to MohallaHub!',
-    hindi_message: 'मोहल्ला हब में आपका स्वागत है!'
+    hindi_message: 'मोहल्ला हब में आपका स्वागत है!',
+    kannada_message: 'ಮೊಹಲ್ಲಾಹಬ್‌ಗೆ ಸ್ವಾಗತ!'
   });
 });
 

@@ -32,7 +32,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  // Allow only images
+  console.log('Multer received file:', {
+    fieldname: file.fieldname,
+    mimetype: file.mimetype,
+    originalname: file.originalname
+  });
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
@@ -49,23 +53,28 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-// Validation rules
+const handleMulterError = (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    console.error('Multer error:', {
+      code: err.code,
+      field: err.field,
+      message: err.message
+    });
+    return res.status(400).json({
+      message: `Unexpected field: ${err.field}`,
+      hindi_message: `अप्रत्याशित फ़ील्ड: ${err.field}`,
+      error: err.code,
+      field: err.field
+    });
+  }
+  next(err);
+};
+
 const createPostValidation = [
-  body('content.text')
-    .isLength({ min: 1, max: 2000 })
-    .withMessage('Post content must be between 1 and 2000 characters'),
-  body('type')
-    .optional()
-    .isIn(['general', 'safety', 'event', 'announcement', 'help', 'recommendation', 'lost_found'])
-    .withMessage('Invalid post type'),
-  body('tags')
-    .optional()
-    .isArray()
-    .withMessage('Tags must be an array'),
-  body('eventDetails')
-    .optional()
-    .isObject()
-    .withMessage('Event details must be an object')
+  body('content').isLength({ min: 1, max: 2000 }).withMessage('Post content must be between 1 and 2000 characters'),
+  body('type').isIn(['general', 'safety', 'event', 'announcement', 'help', 'recommendation', 'lost_found']).withMessage('Invalid post type'),
+  body('neighborhood').notEmpty().withMessage('Neighborhood is required'),
+  body('tags').optional().isString().withMessage('Tags must be a string')
 ];
 
 const commentValidation = [
@@ -94,11 +103,20 @@ const reportValidation = [
 
 // @route   POST /api/posts/create
 // @desc    Create new post
+// Add this debugging middleware BEFORE multer
 router.post(
   '/create',
   protect,
   requireAddressVerification,
   upload.array('images', 5),
+  handleMulterError,
+  (req, res, next) => {
+    console.log('=== AFTER MULTER ===');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
+    console.log('Files:', req.files ? req.files.map(f => ({ fieldname: f.fieldname, originalname: f.originalname })) : 'No files');
+    next();
+  },
   createPostValidation,
   createPost
 );

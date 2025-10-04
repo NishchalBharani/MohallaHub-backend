@@ -15,6 +15,7 @@ exports.register = async (req, res, next) => {
         success: false,
         message: 'Validation failed',
         hindi_message: 'सत्यापन विफल रहा',
+        kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
         errors: errors.array()
       });
     }
@@ -28,6 +29,7 @@ exports.register = async (req, res, next) => {
         success: false,
         message: 'User already exists with this phone number',
         hindi_message: 'इस फोन नंबर से उपयोगकर्ता पहले से मौजूद है',
+        kannada_message: 'ಈ ಫೋನ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಬಳಕೆದಾರ ಈಗಾಗಲೇ ಇದ್ದಾರೆ',
         existingUser: {
           isPhoneVerified: existingUser.isPhoneVerified,
           isAddressVerified: existingUser.isAddressVerified
@@ -56,6 +58,7 @@ exports.register = async (req, res, next) => {
       success: true,
       message: 'Registration successful. Please verify your phone number.',
       hindi_message: 'पंजीकरण सफल। कृपया अपना फोन नंबर सत्यापित करें।',
+      kannada_message: 'ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.',
       userId: user._id,
       phone: user.phone
     };
@@ -84,6 +87,7 @@ exports.login = async (req, res, next) => {
         success: false,
         message: 'Validation failed',
         hindi_message: 'सत्यापन विफल रहा',
+        kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
         errors: errors.array()
       });
     }
@@ -96,7 +100,8 @@ exports.login = async (req, res, next) => {
       return res.status(404).json({
         success: false,
         message: 'User not found with this phone number',
-        hindi_message: 'इस फोन नंबर से उपयोगकर्ता नहीं मिला'
+        hindi_message: 'इस फोन नंबर से उपयोगकर्ता नहीं मिला',
+        kannada_message: 'ಈ ಫೋನ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಬಳಕೆದಾರ ಕಂಡುಬಂದಿಲ್ಲ',
       });
     }
 
@@ -105,7 +110,8 @@ exports.login = async (req, res, next) => {
       return res.status(403).json({
         success: false,
         message: 'Account is suspended or deleted',
-        hindi_message: 'खाता निलंबित या हटा दिया गया है'
+        hindi_message: 'खाता निलंबित या हटा दिया गया है',
+        kannada_message: 'ಖಾತೆಯನ್ನು ಸ್ಥಗಿತಗೊಳಿಸಲಾಗಿದೆ ಅಥವಾ ಅಳಿಸಲಾಗಿದೆ',
       });
     }
 
@@ -125,6 +131,7 @@ exports.login = async (req, res, next) => {
       success: true,
       message: 'OTP sent successfully',
       hindi_message: 'ओटीपी सफलतापूर्वक भेजा गया',
+      kannada_message: 'OTP ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
       userId: user._id,
       phone: user.phone,
       isPhoneVerified: user.isPhoneVerified,
@@ -155,6 +162,7 @@ exports.verifyOTP = async (req, res, next) => {
         success: false,
         message: 'Validation failed',
         hindi_message: 'सत्यापन विफल रहा',
+        kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
         errors: errors.array()
       });
     }
@@ -167,7 +175,8 @@ exports.verifyOTP = async (req, res, next) => {
       return res.status(404).json({
         success: false,
         message: 'User not found',
-        hindi_message: 'उपयोगकर्ता नहीं मिला'
+        hindi_message: 'उपयोगकर्ता नहीं मिला',
+        kannada_message: 'ಬಳಕೆದಾರ ಕಂಡುಬಂದಿಲ್ಲ',
       });
     }
 
@@ -182,7 +191,11 @@ exports.verifyOTP = async (req, res, next) => {
         hindi_message: otpResult.message === 'Invalid OTP' ? 'अमान्य ओटीपी' : 
                      otpResult.message === 'OTP expired' ? 'ओटीपी समाप्त हो गया' :
                      otpResult.message === 'Maximum attempts exceeded' ? 'अधिकतम प्रयास पार कर गए' :
-                     otpResult.message
+                     otpResult.message,
+        kannada_message: otpResult.message === 'Invalid OTP' ? 'ಅಮಾನ್ಯ OTP' : 
+                        otpResult.message === 'OTP expired' ? 'OTP ಅವಧಿ ಮೀರಿದೆ' :
+                        otpResult.message === 'Maximum attempts exceeded' ? 'ಗರಿಷ್ಠ ಪ್ರಯತ್ನಗಳು ಮೀರಿವೆ' :
+                        otpResult.message
       });
     }
 
@@ -199,6 +212,7 @@ exports.verifyOTP = async (req, res, next) => {
       success: true,
       message: 'Phone number verified successfully',
       hindi_message: 'फोन नंबर सफलतापूर्वक सत्यापित हो गया',
+      kannada_message: 'ಫೋನ್ ಸಂಖ್ಯೆ ಯಶಸ್ವಿಯಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
       token,
       user: {
         id: user._id,
@@ -233,6 +247,7 @@ exports.resendOTP = async (req, res, next) => {
         success: false,
         message: 'Validation failed',
         hindi_message: 'सत्यापन विफल रहा',
+        kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
         errors: errors.array()
       });
     }
@@ -245,7 +260,8 @@ exports.resendOTP = async (req, res, next) => {
       return res.status(404).json({
         success: false,
         message: 'User not found',
-        hindi_message: 'उपयोगकर्ता नहीं मिला'
+        hindi_message: 'उपयोगकर्ता नहीं मिला',
+        kannada_message: 'ಬಳಕೆದಾರ ಕಂಡುಬಂದಿಲ್ಲ',
       });
     }
 
@@ -254,7 +270,8 @@ exports.resendOTP = async (req, res, next) => {
       return res.status(429).json({
         success: false,
         message: 'Too many OTP requests. Please try again later.',
-        hindi_message: 'बहुत अधिक ओटीपी अनुरोध। कृपया बाद में पुनः प्रयास करें।'
+        hindi_message: 'बहुत अधिक ओटीपी अनुरोध। कृपया बाद में पुनः प्रयास करें।',
+        kannada_message: 'ತುಂಬಾ OTP ವಿನಂತಿಗಳು. ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
       });
     }
 
@@ -273,6 +290,7 @@ exports.resendOTP = async (req, res, next) => {
       success: true,
       message: 'OTP resent successfully',
       hindi_message: 'ओटीपी पुनः भेजा गया',
+      kannada_message: 'OTP ಯಶಸ್ವಿಯಾಗಿ ಮರುಕಳುಹಿಸಲಾಗಿದೆ',
       userId: user._id
     };
 
@@ -302,7 +320,8 @@ exports.getMe = async (req, res, next) => {
       return res.status(404).json({
         success: false,
         message: 'User not found',
-        hindi_message: 'उपयोगकर्ता नहीं मिला'
+        hindi_message: 'उपयोगकर्ता नहीं मिला',
+        kannada_message: 'ಬಳಕೆದಾರ ಕಂಡುಬಂದಿಲ್ಲ',
       });
     }
 
@@ -345,6 +364,7 @@ exports.updateProfile = async (req, res, next) => {
         success: false,
         message: 'Validation failed',
         hindi_message: 'सत्यापन विफल रहा',
+        kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
         errors: errors.array()
       });
     }
@@ -368,6 +388,7 @@ exports.updateProfile = async (req, res, next) => {
       success: true,
       message: 'Profile updated successfully',
       hindi_message: 'प्रोफ़ाइल सफलतापूर्वक अपडेट की गई',
+      kannada_message: 'ಪ್ರೊಫೈಲ್ ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
       user: {
         id: user._id,
         phone: user.phone,
@@ -400,7 +421,8 @@ exports.logout = async (req, res, next) => {
     res.json({
       success: true,
       message: 'Logged out successfully',
-      hindi_message: 'सफलतापूर्वक लॉग आउट हो गया'
+      hindi_message: 'सफलतापूर्वक लॉग आउट हो गया',
+      kannada_message: 'ಯಶಸ್ವಿಯಾಗಿ ಲಾಗ್ ಔಟ್ ಆಗಿದೆ',
     });
 
   } catch (error) {
@@ -420,6 +442,7 @@ exports.verifyAddress = async (req, res, next) => {
         success: false,
         message: 'Validation failed',
         hindi_message: 'सत्यापन विफल रहा',
+        kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
         errors: errors.array()
       });
     }
@@ -483,6 +506,7 @@ exports.verifyAddress = async (req, res, next) => {
       success: true,
       message: 'Address verified successfully',
       hindi_message: 'पता सफलतापूर्वक सत्यापित हो गया',
+      kannada_message: 'ವಿಳಾಸವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
       user: {
         id: user._id,
         address: user.address,

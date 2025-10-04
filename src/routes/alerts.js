@@ -18,6 +18,7 @@ const createAlert = asyncHandler(async (req, res, next) => {
       success: false,
       message: 'Validation failed',
       hindi_message: 'सत्यापन विफल रहा',
+      kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
       errors: errors.array()
     });
   }
@@ -28,7 +29,8 @@ const createAlert = asyncHandler(async (req, res, next) => {
     return res.status(403).json({
       success: false,
       message: 'Please verify your address to create alerts',
-      hindi_message: 'अलर्ट बनाने के लिए कृपया अपना पता सत्यापित करें'
+      hindi_message: 'अलर्ट बनाने के लिए कृपया अपना पता सत्यापित करें',
+      kannada_message: 'ಎಚ್ಚರಿಕೆಗಳನ್ನು ರಚಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಳಾಸವನ್ನು ಪರಿಶೀಲಿಸಿ'
     });
   }
 
@@ -52,6 +54,7 @@ const createAlert = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Alert created successfully',
     hindi_message: 'अलर्ट सफलतापूर्वक बनाया गया',
+    kannada_message: 'ಎಚ್ಚರಿಕೆ ಯಶಸ್ವಿಯಾಗಿ ರಚಿಸಲಾಗಿದೆ',
     alert
   });
 });
@@ -64,7 +67,8 @@ const getActiveAlerts = asyncHandler(async (req, res, next) => {
     return res.status(403).json({
       success: false,
       message: 'Please verify your address to view alerts',
-      hindi_message: 'अलर्ट देखने के लिए कृपया अपना पता सत्यापित करें'
+      hindi_message: 'अलर्ट देखने के लिए कृपया अपना पता सत्यापित करें',
+      kannada_message: 'ಎಚ್ಚರಿಕೆಗಳನ್ನು ವೀಕ್ಷಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಳಾಸವನ್ನು ಪರಿಶೀಲಿಸಿ'
     });
   }
 
@@ -80,6 +84,7 @@ const getActiveAlerts = asyncHandler(async (req, res, next) => {
     count: activeAlerts.length,
     message: 'Active alerts retrieved successfully',
     hindi_message: 'सक्रिय अलर्ट सफलतापूर्वक प्राप्त किए गए',
+    kannada_message: 'ಸಕ್ರಿಯ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪಡೆಯಲಾಗಿದೆ',
     alerts: activeAlerts
   });
 });
@@ -93,6 +98,7 @@ const getAllAlerts = asyncHandler(async (req, res, next) => {
     count: alerts.length,
     message: 'All alerts retrieved successfully',
     hindi_message: 'सभी अलर्ट सफलतापूर्वक प्राप्त किए गए',
+    kannada_message: 'ಎಲ್ಲಾ ಎಚ್ಚರಿಕೆಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪಡೆಯಲಾಗಿದೆ',
     alerts
   });
 });
@@ -107,7 +113,8 @@ const deactivateAlert = asyncHandler(async (req, res, next) => {
     return res.status(404).json({
       success: false,
       message: 'Alert not found',
-      hindi_message: 'अलर्ट नहीं मिला'
+      hindi_message: 'अलर्ट नहीं मिला',
+      kannada_message: 'ಎಚ್ಚರಿಕೆ ಕಂಡುಬಂದಿಲ್ಲ'
     });
   }
 
@@ -117,7 +124,8 @@ const deactivateAlert = asyncHandler(async (req, res, next) => {
     return res.status(403).json({
       success: false,
       message: 'You are not authorized to deactivate this alert',
-      hindi_message: 'आप इस अलर्ट को निष्क्रिय करने के लिए अधिकृत नहीं हैं'
+      hindi_message: 'आप इस अलर्ट को निष्क्रिय करने के लिए अधिकृत नहीं हैं',
+      kannada_message: 'ನೀವು ಈ ಎಚ್ಚರಿಕೆಯನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲು ಅಧಿಕೃತರಾಗಿಲ್ಲ'
     });
   }
 
@@ -126,7 +134,8 @@ const deactivateAlert = asyncHandler(async (req, res, next) => {
   res.json({
     success: true,
     message: 'Alert deactivated successfully',
-    hindi_message: 'अलर्ट सफलतापूर्वक निष्क्रिय कर दिया गया'
+    hindi_message: 'अलर्ट सफलतापूर्वक निष्क्रिय कर दिया गया',
+    kannada_message: 'ಎಚ್ಚರಿಕೆ ಯಶಸ್ವಿಯಾಗಿ ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ'
   });
 });
 
@@ -140,6 +149,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
       success: false,
       message: 'Validation failed',
       hindi_message: 'सत्यापन विफल रहा',
+      kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
       errors: errors.array()
     });
   }
@@ -164,6 +174,7 @@ const sendNotification = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Notification sent successfully',
     hindi_message: 'अधिसूचना सफलतापूर्वक भेजी गई',
+    kannada_message: 'ಅಧಿಸೂಚನೆ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ',
     notification
   });
 });
@@ -176,37 +187,47 @@ const getEmergencyContacts = asyncHandler(async (req, res, next) => {
     {
       name: 'Police',
       hindi_name: 'पुलिस',
+      kannada_name: 'ಪೊಲೀಸ್',
       number: '100',
       description: 'For immediate police assistance',
-      hindi_description: 'तत्काल पुलिस सहायता के लिए'
+      hindi_description: 'तत्काल पुलिस सहायता के लिए',
+      kannada_description: 'ತಕ್ಷಣದ ಪೊಲೀಸ್ ಸಹಾಯಕ್ಕಾಗಿ'
     },
     {
       name: 'Fire Department',
       hindi_name: 'फायर ब्रिगेड',
+      kannada_name: 'ಅಗ್ನಿಶಾಮಕ ದಳ',
       number: '101',
       description: 'For fire emergencies',
-      hindi_description: 'आग की आपात स्थिति के लिए'
+      hindi_description: 'आग की आपात स्थिति के लिए',
+      kannada_description: 'ಬೆಂಕಿಯ ತುರ್ತು ಸಂದರ್ಭಗಳಿಗೆ'
     },
     {
       name: 'Ambulance',
       hindi_name: 'एम्बुलेंस',
+      kannada_name: 'ಆಂಬುಲೆನ್ಸ್',
       number: '108',
       description: 'For medical emergencies',
-      hindi_description: 'चिकित्सा आपात स्थिति के लिए'
+      hindi_description: 'चिकित्सा आपात स्थिति के लिए',
+      kannada_description: 'ವೈದ್ಯಕೀಯ ತುರ್ತು ಸಂದರ್ಭಗಳಿಗೆ'
     },
     {
       name: 'Women Helpline',
       hindi_name: 'महिला हेल्पलाइन',
+      kannada_name: 'ಮಹಿಳಾ ಸಹಾಯವಾಣಿ',
       number: '1091',
       description: 'For women safety emergencies',
-      hindi_description: 'महिला सुरक्षा आपात स्थिति के लिए'
+      hindi_description: 'महिला सुरक्षा आपात स्थिति के लिए',
+      kannada_description: 'ಮಹಿಳಾ ಸುರಕ್ಷತೆ ತುರ್ತು ಸಂದರ್ಭಗಳಿಗೆ'
     },
     {
       name: 'Child Helpline',
       hindi_name: 'बाल हेल्पलाइन',
+      kannada_name: 'ಮಕ್ಕಳ ಸಹಾಯವಾಣಿ',
       number: '1098',
       description: 'For child protection emergencies',
-      hindi_description: 'बाल संरक्षण आपात स्थिति के लिए'
+      hindi_description: 'बाल संरक्षण आपात स्थिति के लिए',
+      kannada_description: 'ಮಕ್ಕಳ ರಕ್ಷಣೆ ತುರ್ತು ಸಂದರ್ಭಗಳಿಗೆ'
     }
   ];
 
@@ -214,6 +235,7 @@ const getEmergencyContacts = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Emergency contacts retrieved successfully',
     hindi_message: 'आपातकालीन संपर्क सफलतापूर्वक प्राप्त किए गए',
+    kannada_message: 'ತುರ್ತು ಸಂಪರ್ಕಗಳನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪಡೆಯಲಾಗಿದೆ',
     contacts: emergencyContacts
   });
 });
@@ -228,6 +250,7 @@ const reportIncident = asyncHandler(async (req, res, next) => {
       success: false,
       message: 'Validation failed',
       hindi_message: 'सत्यापन विफल रहा',
+      kannada_message: 'ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
       errors: errors.array()
     });
   }
@@ -238,7 +261,8 @@ const reportIncident = asyncHandler(async (req, res, next) => {
     return res.status(403).json({
       success: false,
       message: 'Please verify your address to report incidents',
-      hindi_message: 'घटना की रिपोर्ट करने के लिए कृपया अपना पता सत्यापित करें'
+      hindi_message: 'घटना की रिपोर्ट करने के लिए कृपया अपना पता सत्यापित करें',
+      kannada_message: 'ಘಟನೆಯನ್ನು ವರದಿ ಮಾಡಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಳಾಸವನ್ನು ಪರಿಶೀಲಿಸಿ'
     });
   }
 
@@ -258,6 +282,7 @@ const reportIncident = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Incident reported successfully',
     hindi_message: 'घटना की रिपोर्ट सफलतापूर्वक की गई',
+    kannada_message: 'ಘಟನೆಯನ್ನು ಯಶಸ್ವಿಯಾಗಿ ವರದಿಮಾಡಲಾಗಿದೆ',
     incident
   });
 });
@@ -319,6 +344,7 @@ router.get('/test', (req, res) => {
   res.json({ 
     message: 'Alerts routes are working!',
     hindi_message: 'अलर्ट मार्ग काम कर रहे हैं!',
+    kannada_message: 'ಎಚ್ಚರಿಕೆ ಮಾರ್ಗಗಳು ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿವೆ!',
     available_routes: [
       'POST /api/alerts/create',
       'GET /api/alerts/active',

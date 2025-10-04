@@ -2,85 +2,89 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const Neighborhood = require('../models/Neighborhood');
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
 // @desc    Create a new post
 // @route   POST /api/posts/create
 // @access  Private
-exports.createPost = async (req, res, next) => {
+exports.createPost = async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    console.log('=== CREATE POST STARTED ===');
+    console.log('Request body:', req.body);
+    console.log('Uploaded files:', req.files);
+
+    let contentText = req.body.content;
+    let postTags = req.body.tags ? JSON.parse(req.body.tags) : [];
+
+    if (!contentText || !contentText.trim()) {
       return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        hindi_message: 'सत्यापन विफल रहा',
-        errors: errors.array()
+        message: 'Post content is required',
+        hindi_message: 'पोस्ट सामग्री आवश्यक है'
       });
     }
 
-    const { content, type = 'general', tags, location, eventDetails } = req.body;
-
-    // Check if user has verified address
-    if (!req.user.isAddressVerified || !req.user.neighborhood) {
-      return res.status(403).json({
-        success: false,
-        message: 'Please verify your address to create posts',
-        hindi_message: 'पोस्ट बनाने के लिए कृपया अपना पता सत्यापित करें'
+    if (!req.body.neighborhood) {
+      return res.status(400).json({
+        message: 'Neighborhood is required',
+        hindi_message: 'मोहल्ला आवश्यक है'
       });
     }
 
-    // Handle file uploads if present
-    const images = [];
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(file => {
-        images.push({
-          url: `/uploads/${file.filename}`,
-          filename: file.filename,
-          size: file.size,
-          mimeType: file.mimetype
-        });
+    // Validate neighborhood as a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(req.body.neighborhood)) {
+      return res.status(400).json({
+        message: 'Invalid neighborhood ID',
+        hindi_message: 'अमान्य मोहल्ला आईडी'
       });
     }
 
-    // Create post
     const postData = {
-      author: req.user.id,
       content: {
-        text: content.text,
-        images: images,
-        tags: tags || []
+        text: contentText.trim(),
+        tags: Array.isArray(postTags) ? postTags : []
       },
-      type,
-      neighborhood: req.user.neighborhood._id,
-      location: location || {
-        address: req.user.address.fullAddress,
-        coordinates: req.user.address.coordinates
-      }
+      type: req.body.type || 'general',
+      neighborhood: req.body.neighborhood,
+      author: req.user.id
     };
 
-    // Add event details if it's an event post
-    if (type === 'event' && eventDetails) {
-      postData.eventDetails = {
-        ...eventDetails,
-        attendees: []
-      };
+    if (req.files && req.files.length > 0) {
+      postData.images = req.files.map(file => ({
+        filename: file.filename,
+        originalName: file.originalname,
+        path: file.path,
+        mimetype: file.mimetype
+      }));
     }
 
-    const post = await Post.create(postData);
+    console.log('Post data to save:', postData);
 
-    // Populate author information
-    await post.populate('author', 'name avatar verificationLevel');
+    const post = new Post(postData);
+    await post.save();
+
+    await post.populate('author', 'name profilePicture');
+
+    console.log('=== POST CREATED SUCCESSFULLY ===');
 
     res.status(201).json({
-      success: true,
       message: 'Post created successfully',
       hindi_message: 'पोस्ट सफलतापूर्वक बनाई गई',
       post
     });
-
   } catch (error) {
     console.error('Create post error:', error);
-    next(error);
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        message: 'Validation failed',
+        hindi_message: 'डेटा सत्यापन विफल',
+        errors: Object.values(error.errors).map(err => err.message)
+      });
+    }
+    res.status(500).json({
+      message: 'Server error creating post',
+      hindi_message: 'पोस्ट बनाने में सर्वर त्रुटि',
+      error: error.message
+    });
   }
 };
 

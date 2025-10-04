@@ -1,5 +1,49 @@
 const mongoose = require('mongoose');
-const geohash = require('geohash');
+
+// Simple and reliable geohash implementation
+const generateGeohash = (lat, lng, precision = 7) => {
+  const base32 = '0123456789bcdefghjkmnpqrstuvwxyz';
+  let hash = '';
+  let bits = 0;
+  let bitCount = 0;
+  
+  let minLat = -90, maxLat = 90;
+  let minLng = -180, maxLng = 180;
+  
+  for (let i = 0; i < precision * 5; i++) {
+    if (i % 2 === 0) {
+      // Longitude
+      const mid = (minLng + maxLng) / 2;
+      if (lng >= mid) {
+        bits = (bits << 1) + 1;
+        minLng = mid;
+      } else {
+        bits = (bits << 1);
+        maxLng = mid;
+      }
+    } else {
+      // Latitude
+      const mid = (minLat + maxLat) / 2;
+      if (lat >= mid) {
+        bits = (bits << 1) + 1;
+        minLat = mid;
+      } else {
+        bits = (bits << 1);
+        maxLat = mid;
+      }
+    }
+    
+    bitCount++;
+    
+    if (bitCount === 5) {
+      hash += base32[bits];
+      bits = 0;
+      bitCount = 0;
+    }
+  }
+  
+  return hash;
+};
 
 const neighborhoodSchema = new mongoose.Schema({
   // Basic Information
@@ -36,7 +80,6 @@ const neighborhoodSchema = new mongoose.Schema({
     },
     geohash: {
       type: String,
-      // required: true,
       index: true
     }
   },
@@ -49,7 +92,7 @@ const neighborhoodSchema = new mongoose.Schema({
       default: 'Polygon'
     },
     coordinates: {
-      type: [[[Number]]], // Array of arrays of arrays of numbers
+      type: [[[Number]]],
       default: []
     }
   },
@@ -145,7 +188,7 @@ const neighborhoodSchema = new mongoose.Schema({
       latitude: Number,
       longitude: Number
     },
-    distance: Number // in meters
+    distance: Number
   }],
   
   languages: [{
@@ -184,8 +227,8 @@ neighborhoodSchema.virtual('activeMembersCount').get(function() {
   return this.stats.verifiedResidents;
 });
 
-// Pre-save middleware - FIXED VERSION
-neighborhoodSchema.pre('save', function(next) {
+// Pre-validation middleware - WORKING GEOHASH
+neighborhoodSchema.pre('validate', function(next) {
   // Generate slug from name
   if (this.isModified('name') && this.name) {
     this.slug = this.name
@@ -194,24 +237,24 @@ neighborhoodSchema.pre('save', function(next) {
       .replace(/^-|-$/g, '');
   }
   
-  // Generate geohash if coordinates are provided - FIXED LOGIC
+  // Generate geohash - SIMPLIFIED AND RELIABLE
   if (this.location && this.location.coordinates) {
     const { latitude, longitude } = this.location.coordinates;
     if (latitude !== undefined && longitude !== undefined && 
         latitude !== null && longitude !== null) {
       try {
-        this.location.geohash = geohash.encode(latitude, longitude, 7);
+        this.location.geohash = generateGeohash(latitude, longitude, 7);
       } catch (error) {
-        console.warn('Geohash generation failed:', error);
-        // Set a default geohash to avoid validation errors
-        this.location.geohash = geohash.encode(0, 0, 7);
+        console.warn('Geohash generation failed, using fallback:', error);
+        // Simple fallback - combine coordinates as string
+        this.location.geohash = `loc${Math.round(latitude * 10000)}${Math.round(longitude * 10000)}`;
       }
     }
   }
   
-  // Ensure geohash is always set to avoid validation errors
+  // Ensure geohash is always set
   if (!this.location.geohash) {
-    this.location.geohash = geohash.encode(0, 0, 7); // Default geohash
+    this.location.geohash = generateGeohash(20.5937, 78.9629, 7); // India center
   }
   
   this.updatedAt = new Date();
@@ -220,8 +263,6 @@ neighborhoodSchema.pre('save', function(next) {
 
 // Instance methods
 neighborhoodSchema.methods.isWithinBoundary = function(latitude, longitude) {
-  // Simple distance check (for MVP)
-  // In production, use proper polygon intersection
   const distance = this.calculateDistance(latitude, longitude);
   return distance <= 2000; // 2km radius
 };
@@ -229,7 +270,6 @@ neighborhoodSchema.methods.isWithinBoundary = function(latitude, longitude) {
 neighborhoodSchema.methods.calculateDistance = function(latitude, longitude) {
   const { latitude: centerLat, longitude: centerLng } = this.location.coordinates;
   
-  // Haversine formula
   const R = 6371e3; // Earth's radius in meters
   const φ1 = centerLat * Math.PI/180;
   const φ2 = latitude * Math.PI/180;
@@ -321,7 +361,6 @@ neighborhoodSchema.statics.findByGeohash = function(geohashPrefix) {
 };
 
 neighborhoodSchema.statics.createNeighborhood = async function(neighborhoodData) {
-  // Check if neighborhood already exists
   const existing = await this.findOne({
     'location.address.pincode': neighborhoodData.location.address.pincode,
     name: neighborhoodData.name

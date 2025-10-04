@@ -65,3 +65,8 @@ uploads/
 # Temporary files
 tmp/
 temp/
+
+# Python files and environments
+*.py
+__pycache__/
+venv/

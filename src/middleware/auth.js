@@ -20,7 +20,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
     return res.status(401).json({
       success: false,
       message: 'Not authorized to access this route',
-      hindi_message: 'इस मार्ग तक पहुंचने के लिए अधिकृत नहीं है'
+      hindi_message: 'इस मार्ग तक पहुंचने के लिए अधिकृत नहीं है',
+      kannada_message: 'ಈ ಮಾರ್ಗವನ್ನು ಪ್ರವೇಶಿಸಲು ಅಧಿಕೃತವಲ್ಲ'
     });
   }
 
@@ -35,7 +36,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'User no longer exists',
-        hindi_message: 'उपयोगकर्ता अब मौजूद नहीं है'
+        hindi_message: 'उपयोगकर्ता अब मौजूद नहीं है',
+        kannada_message: 'ಬಳಕೆದಾರ ಇನ್ನು ಮುಂದೆ ಇಲ್ಲ'
       });
     }
 
@@ -44,7 +46,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'Account is suspended or deleted',
-        hindi_message: 'खाता निलंबित या हटा दिया गया है'
+        hindi_message: 'खाता निलंबित या हटा दिया गया है',
+        kannada_message: 'ಖಾತೆಯನ್ನು ಸ್ಥಗಿತಗೊಳಿಸಲಾಗಿದೆ ಅಥವಾ ಅಳಿಸಲಾಗಿದೆ'
       });
     }
 
@@ -53,7 +56,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
       return res.status(403).json({
         success: false,
         message: 'Please verify your phone number first',
-        hindi_message: 'कृपया पहले अपना फोन नंबर सत्यापित करें'
+        hindi_message: 'कृपया पहले अपना फोन नंबर सत्यापित करें',
+        kannada_message: 'ದಯವಿಟ್ಟು ಮೊದಲು ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ'
       });
     }
 
@@ -65,7 +69,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
     return res.status(401).json({
       success: false,
       message: 'Not authorized to access this route',
-      hindi_message: 'इस मार्ग तक पहुंचने के लिए अधिकृत नहीं है'
+      hindi_message: 'इस मार्ग तक पहुंचने के लिए अधिकृत नहीं है',
+      kannada_message: 'ಈ ಮಾರ್ಗವನ್ನು ಪ್ರವೇಶಿಸಲು ಅಧಿಕೃತವಲ್ಲ'
     });
   }
 });
@@ -77,7 +82,8 @@ exports.authorize = (...roles) => {
       return res.status(403).json({
         success: false,
         message: `User role ${req.user.role} is not authorized to access this route`,
-        hindi_message: `उपयोगकर्ता भूमिका ${req.user.role} इस मार्ग तक पहुंचने के लिए अधिकृत नहीं है`
+        hindi_message: `उपयोगकर्ता भूमिका ${req.user.role} इस मार्ग तक पहुंचने के लिए अधिकृत नहीं है`,
+        kannada_message: `ಬಳಕೆದಾರ ಪಾತ್ರ ${req.user.role} ಈ ಮಾರ್ಗವನ್ನು ಪ್ರವೇಶಿಸಲು ಅಧಿಕೃತವಲ್ಲ`
       });
     }
     next();
@@ -90,7 +96,8 @@ exports.requireAddressVerification = asyncHandler(async (req, res, next) => {
     return res.status(403).json({
       success: false,
       message: 'Please verify your address to access neighborhood features',
-      hindi_message: 'मोहल्ला सुविधाओं तक पहुंचने के लिए कृपया अपना पता सत्यापित करें'
+      hindi_message: 'मोहल्ला सुविधाओं तक पहुंचने के लिए कृपया अपना पता सत्यापित करें',
+      kannada_message: 'ಪ್ರದೇಶದ ಸೌಲಭ್ಯಗಳನ್ನು ಪ್ರವೇಶಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಳಾಸವನ್ನು ಪರಿಶೀಲಿಸಿ'
     });
   }
   next();
@@ -155,7 +162,8 @@ exports.authRateLimit = (maxAttempts = 5, windowMs = 15 * 60 * 1000) => {
           return res.status(429).json({
             success: false,
             message: `Too many authentication attempts. Please try again in ${remainingTime} minutes.`,
-            hindi_message: `बहुत अधिक प्रमाणीकरण प्रयास। कृपया ${remainingTime} मिनट में पुनः प्रयास करें।`
+            hindi_message: `बहुत अधिक प्रमाणीकरण प्रयास। कृपया ${remainingTime} मिनट में पुनः प्रयास करें।`,
+            kannada_message: `ತುಂಬಾ ಪ್ರಮಾಣೀಕರಣ ಪ್ರಯತ್ನಗಳು. ದಯವಿಟ್ಟು ${remainingTime} ನಿಮಿಷಗಳಲ್ಲಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.`
           });
         }
       }
@@ -173,7 +181,8 @@ exports.validateToken = asyncHandler(async (req, res, next) => {
     return res.status(401).json({
       success: false,
       message: 'No token provided',
-      hindi_message: 'कोई टोकन प्रदान नहीं किया गया'
+      hindi_message: 'कोई टोकन प्रदान नहीं किया गया',
+      kannada_message: 'ಯಾವುದೇ ಟೋಕನ್ ಒದಗಿಸಲಾಗಿಲ್ಲ'
     });
   }
 
@@ -185,7 +194,8 @@ exports.validateToken = asyncHandler(async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'Invalid token',
-        hindi_message: 'अमान्य टोकन'
+        hindi_message: 'अमान्य टोकन',
+        kannada_message: 'ಅಮಾನ್ಯ ಟೋಕನ್'
       });
     }
 
@@ -205,7 +215,8 @@ exports.validateToken = asyncHandler(async (req, res, next) => {
     res.status(401).json({
       success: false,
       message: 'Invalid token',
-      hindi_message: 'अमान्य टोकन'
+      hindi_message: 'अमान्य टोकन',
+      kannada_message: 'ಅಮಾನ್ಯ ಟೋಕನ್'
     });
   }
 });
